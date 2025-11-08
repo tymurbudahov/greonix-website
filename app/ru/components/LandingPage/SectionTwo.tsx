@@ -8,7 +8,7 @@ export default function SectionTwo() {
           Резиновая крошка для любых задач и масштабов
         </h1>
         <p className="text-gray-600 text-center">
-          Наша продукция подходит для различных типов покрытий
+          Высококачественная резиновая крошка Greonix подходит для различных типов покрытий: спортивных объектов, строительных проектов и частного использования
         </p>
       </div>
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 mt-10 w-full max-w-6xl">

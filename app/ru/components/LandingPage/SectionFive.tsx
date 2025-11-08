@@ -1,6 +1,42 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
+import emailjs from "@emailjs/browser";
 
 export default function SectionFive() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "success" | "error"
+  >("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email) return;
+
+    setStatus("sending");
+
+    try {
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_TEMPLATE_ID_SUBSCRIBE!,
+        {
+          email: email,
+        },
+        process.env.NEXT_PUBLIC_KEY_EMAILJS!
+      );
+
+      setStatus("success");
+      setEmail("");
+      setTimeout(() => setStatus("idle"), 3000);
+    } catch (error) {
+      console.error("Error sending email:", error);
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 3000);
+    }
+  };
+
   return (
     <div className="flex flex-col lg:flex-row items-center justify-center mt-7 mb-20 px-6 lg:px-0">
       {/* Icon left side ...Commented out, can be uncommented to switch icon side... */}
@@ -22,18 +58,33 @@ export default function SectionFive() {
         </p>
 
         {/* Input box */}
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-0">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col sm:flex-row gap-2 sm:gap-0"
+        >
           <input
-            type="text"
-            id="first_name"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="bg-gray-100 border border-gray-100 text-gray-900 text-lg focus:ring-blue-500 focus:border-blue-500 w-full pl-8 rounded-2xl sm:rounded-r-none sm:rounded-l-2xl py-4 sm:py-0"
             placeholder="Email"
             required
+            disabled={status === "sending"}
           />
-          <p className="bg-[#388E3B] p-4 text-white rounded-2xl sm:rounded-l-none sm:rounded-r-2xl text-center cursor-pointer hover:bg-[#2d7a31] transition-colors">
-            Подписаться
-          </p>
-        </div>
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            className="bg-[#388E3B] p-4 text-white rounded-2xl sm:rounded-l-none sm:rounded-r-2xl text-center cursor-pointer hover:bg-[#2d7a31] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {status === "sending"
+              ? "Отправка..."
+              : status === "success"
+              ? "Успешно!"
+              : status === "error"
+              ? "Ошибка"
+              : "Подписаться"}
+          </button>
+        </form>
       </div>
 
       {/* Icon right side */}

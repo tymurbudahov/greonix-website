@@ -7,7 +7,7 @@ export default function Footer() {
         {/* Upper part */}
         <div className="text-center lg:text-left">
           <p className="text-2xl sm:text-3xl lg:text-4xl w-full lg:w-90 text-[#4CAF4F]">
-            Make secure payment & grow your online business
+            Качественная резиновая крошка для вашего бизнеса и проектов
           </p>
         </div>
 
@@ -23,7 +23,7 @@ export default function Footer() {
               className="flex-shrink-0"
             />
             <p className="text-base lg:text-lg w-full lg:w-60">
-              8502 Preston Rd. Inglewood, Maine 98380, USA
+              Черных Запорожцев, 16, Днепр, Днепропетровская область, 49000
             </p>
           </div>
 
@@ -50,7 +50,7 @@ export default function Footer() {
               unoptimized
               className="flex-shrink-0"
             />
-            <p className="text-base lg:text-lg">support@fintech.co</p>
+            <p className="text-base lg:text-lg">info@greonix.com.ua</p>
           </div>
         </div>
       </div>

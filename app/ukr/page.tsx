@@ -1,10 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Inter } from "next/font/google";
+
+import SectionOne from "./components/LandingPage/SectionOne";
+import SectionTwo from "./components/LandingPage/SectionTwo";
+import SectionThree from "./components/LandingPage/SectionThree";
+import SectionFour from "./components/LandingPage/SectionFour";
+import SectionFive from "./components/LandingPage/SectionFive";
 
 export default function Page() {
   return (
     <div>
-      <p className="mt-5">Ukraining page</p>
+      <SectionOne />
+      <SectionTwo />
+      <SectionThree />
+      <SectionFour />
+      <SectionFive />
     </div>
   );
 }

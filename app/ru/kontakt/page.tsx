@@ -6,7 +6,7 @@ import { useState } from "react";
 export default function Contact() {
   const [formData, setFormData] = useState({
     firstName: "",
-    lastName: "",
+    company: "",
     email: "",
     phone: "",
     message: "",
@@ -66,7 +66,7 @@ export default function Contact() {
             </div>
             <div>
               <p className="font-bold text-lg mb-1">Email</p>
-              <p className="text-gray-600">support@greonix.com</p>
+              <p className="text-gray-600">info@greonix.com.ua</p>
             </div>
           </div>
 
@@ -85,7 +85,7 @@ export default function Contact() {
             <div>
               <p className="font-bold text-lg mb-1">Адрес</p>
               <p className="text-gray-600">
-                8502 Preston Rd. Inglewood, Maine 98380, USA
+                Черных Запорожцев, 16, Днепр, Днепропетровская область, 49000
               </p>
             </div>
           </div>
@@ -110,26 +110,26 @@ export default function Contact() {
                   value={formData.firstName}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4CAF4F] focus:border-transparent outline-none transition-all"
-                  placeholder="Иван"
+                  placeholder=""
                   required
                 />
               </div>
 
               <div>
                 <label
-                  htmlFor="lastName"
+                  htmlFor="company"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Фамилия
+                  Компания
                 </label>
                 <input
                   type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
+                  id="company"
+                  name="company"
+                  value={formData.company}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4CAF4F] focus:border-transparent outline-none transition-all"
-                  placeholder="Петров"
+                  placeholder=""
                   required
                 />
               </div>
@@ -151,7 +151,7 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4CAF4F] focus:border-transparent outline-none transition-all"
-                  placeholder="ivan@example.com"
+                  placeholder="your@example.com"
                   required
                 />
               </div>

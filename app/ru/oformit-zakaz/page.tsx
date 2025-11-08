@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import emailjs from "@emailjs/browser";
 
 export default function OrderPage() {
@@ -16,12 +17,10 @@ export default function OrderPage() {
   });
 
   const [copied, setCopied] = useState(false);
-  const [messageSent, setMessageSent] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useRef<HTMLFormElement>(null);
+  const router = useRouter();
 
   const serviceID = process.env.NEXT_PUBLIC_SERVICE_ID as string;
   const templateIDOrder = process.env.NEXT_PUBLIC_TEMPLATE_ID_ORDER as string;
@@ -29,20 +28,22 @@ export default function OrderPage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (form.current === null || isDisabled) return;
+    if (form.current === null || isSubmitting) return;
 
-    setIsDisabled(true);
+    setIsSubmitting(true);
 
     emailjs.sendForm(serviceID, templateIDOrder, form.current, publicKEY).then(
       (result) => {
-        setMessageSent(true);
-        setShowModal(true);
         console.log(`${result.text}, order sent. Thank you.`);
+        // Redirect to success page
+        router.push("/ru/order-success");
       },
       (error) => {
-        setErrorMessage(true);
-        setShowModal(true);
         console.log(`${error.text}, error occurred.`);
+        setIsSubmitting(false);
+        alert(
+          "Произошла ошибка при отправке заказа. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону."
+        );
       }
     );
   };
@@ -58,7 +59,7 @@ export default function OrderPage() {
 
   const copyAddress = () => {
     navigator.clipboard.writeText(
-      "8502 Preston Rd. Inglewood, Maine 98380, USA"
+      "Черных Запорожцев, 16, Днепр, Днепропетровская область, 49000"
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -93,6 +94,7 @@ export default function OrderPage() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4CAF4F] focus:border-transparent outline-none transition-all"
                   placeholder="Ваше имя"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -113,6 +115,7 @@ export default function OrderPage() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4CAF4F] focus:border-transparent outline-none transition-all"
                   placeholder="your@email.com"
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -133,6 +136,7 @@ export default function OrderPage() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4CAF4F] focus:border-transparent outline-none transition-all"
                   placeholder="+380 67 123 4567"
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -153,6 +157,7 @@ export default function OrderPage() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4CAF4F] focus:border-transparent outline-none transition-all"
                   placeholder="Название компании"
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -173,6 +178,7 @@ export default function OrderPage() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4CAF4F] focus:border-transparent outline-none transition-all"
                   placeholder="Например: 10 тонн"
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -192,32 +198,17 @@ export default function OrderPage() {
                   rows={5}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4CAF4F] focus:border-transparent outline-none transition-all resize-none"
                   placeholder="Напишите дополнительную информацию..."
+                  disabled={isSubmitting}
                 />
               </div>
 
               {/* Submit Button */}
               <button
                 type="submit"
-                disabled={isDisabled}
-                className={`w-full font-semibold py-4 px-6 rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg ${
-                  isDisabled && messageSent
-                    ? "bg-green-600 cursor-not-allowed text-white"
-                    : ""
-                }
-                ${
-                  isDisabled && errorMessage
-                    ? "bg-red-600 cursor-not-allowed text-white"
-                    : ""
-                }
-                ${
-                  !isDisabled
-                    ? "bg-[#4CAF4F] hover:bg-[#45a049] text-white cursor-pointer"
-                    : ""
-                }`}
+                disabled={isSubmitting}
+                className="w-full bg-[#4CAF4F] hover:bg-[#45a049] text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isDisabled && messageSent && "Заказ отправлен!"}
-                {isDisabled && errorMessage && "Ошибка отправки"}
-                {!isDisabled && "Отправить Заказ"}
+                {isSubmitting ? "Отправка..." : "Отправить Заказ"}
               </button>
             </form>
           </div>
@@ -231,7 +222,8 @@ export default function OrderPage() {
                 onClick={copyAddress}
                 className="text-gray-600 cursor-pointer hover:text-[#4CAF4F] transition-colors relative"
               >
-                Адрес офиса: 8502 Preston Rd. Inglewood, Maine 98380, USA
+                Адрес офиса: Черных Запорожцев, 16, Днепр, Днепропетровская
+                область, 49000
               </p>
               {copied && (
                 <span className="text-[#4CAF4F] text-sm mt-1 block">
@@ -242,7 +234,7 @@ export default function OrderPage() {
 
             {/* Quick Inquiries */}
             <div>
-              <h3 className="font-bold text-xl mb-4">For Quick Inquiries</h3>
+              <h3 className="font-bold text-xl mb-4">Для быстрых запросов</h3>
               <div className="space-y-2">
                 <p className="text-gray-600">
                   <span className="font-medium">Телефон:</span>{" "}
@@ -256,10 +248,10 @@ export default function OrderPage() {
                 <p className="text-gray-600">
                   <span className="font-medium">Email:</span>{" "}
                   <a
-                    href="mailto:support@greonix.com"
+                    href="mailto:info@greonix.com.ua"
                     className="hover:text-[#4CAF4F] transition-colors underline"
                   >
-                    support@greonix.com
+                    info@greonix.com.ua
                   </a>
                 </p>
               </div>
@@ -286,101 +278,6 @@ export default function OrderPage() {
           </div>
         </div>
       </div>
-
-      {/* Toast Notification */}
-      {showModal && (
-        <div className="fixed top-24 right-6 z-50 animate-slide-in">
-          <div
-            className={`rounded-lg shadow-2xl p-4 max-w-sm border-l-4 ${
-              messageSent
-                ? "bg-white border-green-500"
-                : "bg-white border-red-500"
-            }`}
-          >
-            <div className="flex items-start gap-3">
-              <div
-                className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
-                  messageSent ? "bg-green-100" : "bg-red-100"
-                }`}
-              >
-                {messageSent ? (
-                  <svg
-                    className="w-4 h-4 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className="w-4 h-4 text-red-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                )}
-              </div>
-              <div className="flex-1">
-                <h3
-                  className={`font-semibold text-sm ${
-                    messageSent ? "text-green-800" : "text-red-800"
-                  }`}
-                >
-                  {messageSent
-                    ? "Заказ успешно отправлен!"
-                    : "Ошибка при отправке"}
-                </h3>
-                <p className="text-gray-600 text-sm mt-1">
-                  {messageSent
-                    ? "Мы свяжемся с вами в ближайшее время."
-                    : "Пожалуйста, попробуйте еще раз."}
-                </p>
-              </div>
-              <button
-                onClick={() => setShowModal(false)}
-                className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <style jsx>{`
-        @keyframes slide-in {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        .animate-slide-in {
-          animation: slide-in 0.3s ease-out;
-        }
-      `}</style>
     </div>
   );
 }

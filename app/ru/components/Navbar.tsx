@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,7 +77,7 @@ export default function Navbar() {
           ></span>
         </button>
 
-        {/* Menu options - desktop version (unchanged) */}
+        {/* Menu options - desktop version */}
         <div
           className={`hidden lg:flex items-center font-inter transition-all duration-300 ${
             isScrolled ? "gap-6" : "gap-10"
@@ -93,33 +94,86 @@ export default function Navbar() {
 
             <Link href="/ru/nasha-produktsiya/rezinovaya-kroshka">
               <p className="hover:text-[#4CAF4F] transition-colors">
-                Наша Продукция
+                Резиновая Крошка
               </p>
             </Link>
 
             <Link href="/ru/kontakt">
-              <p className="hover:text-[#4CAF4F] transition-colors">Контакт</p>
+              <p className="hover:text-[#4CAF4F] transition-colors">Контакты</p>
             </Link>
+
+            {/* Language Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsLangOpen(!isLangOpen)}
+                className="hover:text-[#4CAF4F] transition-colors flex items-center gap-1"
+              >
+                RU
+                <svg
+                  className={`w-4 h-4 transition-transform ${
+                    isLangOpen ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              {isLangOpen && (
+                <div className="absolute top-full mt-2 bg-white shadow-lg rounded-lg py-2 min-w-[80px]">
+                  <Link
+                    href="/en"
+                    className="block px-4 py-2 hover:bg-gray-100 hover:text-[#4CAF4F] transition-colors"
+                    onClick={() => setIsLangOpen(false)}
+                  >
+                    EN
+                  </Link>
+                  <Link
+                    href="/ukr"
+                    className="block px-4 py-2 hover:bg-gray-100 hover:text-[#4CAF4F] transition-colors"
+                    onClick={() => setIsLangOpen(false)}
+                  >
+                    UA
+                  </Link>
+                  <Link
+                    href="/ru"
+                    className="block px-4 py-2 hover:bg-gray-100 hover:text-[#4CAF4F] transition-colors"
+                    onClick={() => setIsLangOpen(false)}
+                  >
+                    RU
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Submit order button */}
-          <div
-            className={`flex gap-2 bg-[#4CAF4F] text-white rounded-xl items-centered transition-all duration-300 ${
-              isScrolled ? "p-2 pt-3 pb-3 pl-5 pr-5" : "p-3 pt-4 pb-4 pl-6 pr-6"
-            }`}
-          >
-            <Link href="/ru/oformit-zakaz">
+          <Link href="/ru/oformit-zakaz">
+            <div
+              className={`flex gap-2 bg-[#4CAF4F] text-white rounded-xl items-centered transition-all duration-300 ${
+                isScrolled
+                  ? "p-2 pt-3 pb-3 pl-5 pr-5"
+                  : "p-3 pt-4 pb-4 pl-6 pr-6"
+              }`}
+            >
               <p>Оформить Заказ</p>
-            </Link>
-            <Image
-              src="/Navbar/right-arrow.svg"
-              width={20}
-              height={20}
-              alt="Right arrow"
-              unoptimized
-              className="mt-1"
-            />
-          </div>
+              <Image
+                src="/Navbar/right-arrow.svg"
+                width={20}
+                height={20}
+                alt="Right arrow"
+                unoptimized
+                className="mt-1"
+              />
+            </div>
+          </Link>
         </div>
 
         {/* Mobile menu */}
@@ -140,27 +194,89 @@ export default function Navbar() {
               onClick={() => setIsMenuOpen(false)}
             >
               <p className="text-lg hover:text-[#4CAF4F] transition-colors">
-                Наша Продукция
+                Резиновая Крошка
               </p>
             </Link>
 
             <Link href="/ru/kontakt" onClick={() => setIsMenuOpen(false)}>
               <p className="text-lg hover:text-[#4CAF4F] transition-colors">
-                Контакт
+                Контакты
               </p>
             </Link>
 
-            <div className="flex gap-2 bg-[#4CAF4F] hover:bg-[#45a049] text-white p-3 rounded-xl items-center justify-center mt-4 transition-colors cursor-pointer">
-              <p>Оформить Заказ</p>
-              <Image
-                src="/Navbar/right-arrow.svg"
-                width={20}
-                height={20}
-                alt="Right arrow"
-                unoptimized
-                className="mt-1"
-              />
+            {/* Language Dropdown Mobile */}
+            <div className="relative">
+              <button
+                onClick={() => setIsLangOpen(!isLangOpen)}
+                className="text-lg hover:text-[#4CAF4F] transition-colors flex items-center gap-1"
+              >
+                RU
+                <svg
+                  className={`w-4 h-4 transition-transform ${
+                    isLangOpen ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              {isLangOpen && (
+                <div className="mt-2 bg-gray-50 rounded-lg py-2 pl-4">
+                  <Link
+                    href="/en"
+                    className="block py-2 hover:text-[#4CAF4F] transition-colors"
+                    onClick={() => {
+                      setIsLangOpen(false);
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    EN
+                  </Link>
+                  <Link
+                    href="/ukr"
+                    className="block py-2 hover:text-[#4CAF4F] transition-colors"
+                    onClick={() => {
+                      setIsLangOpen(false);
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    UA
+                  </Link>
+                  <Link
+                    href="/ru"
+                    className="block py-2 hover:text-[#4CAF4F] transition-colors"
+                    onClick={() => {
+                      setIsLangOpen(false);
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    RU
+                  </Link>
+                </div>
+              )}
             </div>
+
+            <Link href="/ru/oformit-zakaz" onClick={() => setIsMenuOpen(false)}>
+              <div className="flex gap-2 bg-[#4CAF4F] hover:bg-[#45a049] text-white p-3 rounded-xl items-center justify-center mt-4 transition-colors cursor-pointer">
+                <p>Оформить Заказ</p>
+                <Image
+                  src="/Navbar/right-arrow.svg"
+                  width={20}
+                  height={20}
+                  alt="Right arrow"
+                  unoptimized
+                  className="mt-1"
+                />
+              </div>
+            </Link>
           </div>
         </div>
 
